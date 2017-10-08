@@ -32,7 +32,7 @@ export class HeroService {
     return this.http
                .post(this.heroesUrl, JSON.stringify({name: name}), {headers: this.headers})
                .toPromise()
-               .then(res => res.json().data as Hero)
+               .then(res => res.json() as Hero)
                .catch(this.handleError);
   }
 
@@ -46,7 +46,12 @@ export class HeroService {
   }
 
   delete(id: number): Promise<void> {
-    return Promise.resolve();
+    const url = `${this.heroesUrl}/${id}`;
+    return this.http
+               .delete(url, {headers: this.headers})
+               .toPromise()
+               .then(() => null)
+               .catch(this.handleError);
   }
 
   private handleError(error: any): Promise<any> {
