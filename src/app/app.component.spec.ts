@@ -4,7 +4,7 @@ import { AppComponent } from './app.component';
 import { HeroDetailComponent } from './hero-detail/hero-detail.component';
 
 describe('AppComponent', () => {
-  
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
