@@ -17,15 +17,21 @@ pipeline {
     }
     stages {
         stage('Install dependencies') {
-            sh 'npm install'
+            steps {
+                sh 'npm install'
+            }
         }
 
         stage('Build') {
-            sh 'npm run build'
+            steps {
+                sh 'npm run build'
+            }
         }
 
         stage('Test') {
-            sh 'npm run test'
+            steps {
+                sh 'npm run test'
+            }
         }
     }
 }
