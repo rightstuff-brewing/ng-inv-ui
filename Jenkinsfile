@@ -1,38 +1,22 @@
-pipeline {
-    agent {
-        kubernetes {
-            cloud 'local cluster'
-            label 'node-k8s'
-            containers [
-                containerTemplate {
-                    name 'node'
-                    image 'gcr.io/rightstuff-176212/jenkins-slave:node.master'
-                    ttyEnabled true
-                    command 'cat'
-                    alwaysPullImage true
-                    volumes [
-                        hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock')
-                    ]
-                }
-            ]
-        }
-    }
-    stages {
-        stage('Install dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
+def projectName = 'rightstuff-176212';
+def builderImageName = "gcr.io/${projectName}/jenkins-slave:node.master";
 
-        stage('Build') {
-            steps {
+podTemplate(cloud: 'local cluster', label: 'node-k8s', 
+    containers: [containerTemplate(name: 'node', image: builderImageName, ttyEnabled: true, command: 'cat', alwaysPullImage: true)],
+    volumes: [
+            hostPathVolume(hostPath: '/var/run/docker.sock', mountPath: '/var/run/docker.sock'),
+    ]
+) {
+    node('node-k8s') {
+        checkout scm
+
+        ansiColor('xterm') {
+            stage('Install dependencies') {
+                sh 'npm intall'
+            }
+
+            stage('Build') {
                 sh 'npm run build'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'npm run test'
             }
         }
     }
