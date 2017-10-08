@@ -8,15 +8,18 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
     ]
 ) {
     node('node-k8s') {
-        checkout scm
+        container('node') {
+            checkout scm
 
-        ansiColor('xterm') {
-            stage('Install dependencies') {
-                sh 'npm intall'
-            }
+            ansiColor('xterm') {
+                stage('Install dependencies') {
+                    sh 'npm install -g yarn'
+                    sh 'yarn install'
+                }
 
-            stage('Build') {
-                sh 'npm run build'
+                stage('Build') {
+                    sh 'yarn ng build --prod --aot --no-progress'
+                }
             }
         }
     }
