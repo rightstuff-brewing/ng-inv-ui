@@ -42,9 +42,6 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
                         },
                         'Firefox': {
                             echo 'Test Firefox'
-                        },
-                        'Edge': {
-                            echo 'Test Edge'
                         }
                     )
                 }
