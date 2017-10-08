@@ -20,6 +20,14 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
                 stage('Build') {
                     sh 'yarn ng build --prod --aot --no-progress'
                 }
+
+                stage('Test') {
+                    sh 'yarn ng test --single-run --no-progress'
+                }
+
+                stage('Lint') {
+                    sh 'yarn ng lint'
+                }
             }
         }
     }
