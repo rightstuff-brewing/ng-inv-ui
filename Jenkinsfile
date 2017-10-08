@@ -17,6 +17,10 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
                     sh 'yarn install'
                 }
 
+                stage('Lint') {
+                    sh 'yarn ng lint'
+                }
+
                 stage('Build') {
                     sh 'yarn ng build --prod --aot --no-progress'
                 }
@@ -27,21 +31,17 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
 
                 stage('Test') {
                     echo 'Disabled until real browser support is implemented'
-                    parallel {
-                        stage('Chrome') {
+                    parallel (
+                        'Chrome': { 
                             echo 'Test Chrome'
-                        }
-                        stage('Firefox') {
+                        },
+                        'Firefox': {
                             echo 'Test Firefox'
-                        }
-                        stage('Edge') {
+                        },
+                        'Edge': {
                             echo 'Test Edge'
                         }
-                    }
-                }
-
-                stage('Lint') {
-                    sh 'yarn ng lint'
+                    )
                 }
             }
         }
