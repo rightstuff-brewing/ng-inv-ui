@@ -6,11 +6,18 @@ import { Router } from '@angular/router';
 import { HeroesComponent } from './heroes.component';
 import { HeroDetailComponent } from '../hero-detail/hero-detail.component';
 
+import { Hero } from '../hero';
 import { HeroService } from '../hero.service';
 
 @Injectable()
 export class RouterStub {
     navigateByUrl(url: string) { return url; }
+}
+
+export class HeroServiceStub {
+  getHeroes(): Promise<Hero[]> {
+    return Promise.resolve([]);
+  }
 }
 
 describe('HeroesComponent', () => {
@@ -23,7 +30,7 @@ describe('HeroesComponent', () => {
       declarations: [ HeroesComponent ],
       schemas:      [ NO_ERRORS_SCHEMA ],
       providers: [
-        HeroService,
+        { provide: HeroService, useClass: HeroServiceStub },
         { provide: Router, useClass: RouterStub }
       ],
       imports: [ FormsModule ],

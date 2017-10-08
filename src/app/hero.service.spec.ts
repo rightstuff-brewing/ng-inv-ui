@@ -1,11 +1,17 @@
 import { TestBed, inject } from '@angular/core/testing';
+import { Http } from '@angular/http';
 
 import { HeroService } from './hero.service';
+
+class HttpStub {}
 
 describe('HeroService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [HeroService]
+      providers: [
+        HeroService,
+        { provide: Http, useClass: HttpStub }
+      ]
     });
   });
 
