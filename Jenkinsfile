@@ -1,5 +1,7 @@
 def projectName = 'rightstuff-176212';
 def builderImageName = "gcr.io/${projectName}/jenkins-slave:node.master";
+def baseImageTag = "gcr.io/${projectName}/inv-ui:${env.BRANCH_NAME.replace("/", "-")}"
+def imageTag = "${baseImageTag}.${env.BUILD_NUMBER}"
 
 podTemplate(cloud: 'local cluster', label: 'node-k8s', 
     containers: [containerTemplate(name: 'node', image: builderImageName, ttyEnabled: true, command: 'cat', alwaysPullImage: true)],
@@ -34,10 +36,15 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
                             sh 'yarn ng test --browsers "ChromeHeadless" --single-run --no-progress'
                         },
                         'Firefox': {
-                            sh 'yarn ng test --browsers "Firefox" --single-run --no-progress'
+                            sh 'yarn ng test --browsers "FirefoxHeadless" --single-run --no-progress'
                         }
                     )
                     junit 'test_results/**/*'
+                }
+
+                stage('Publish') {
+                    sh "docker build -t ${imageTag} ."
+                    sh "gcloud docker -- push ${imageTag}"
                 }
             }
         }
