@@ -30,16 +30,26 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
                 stage('Test') {
                     parallel (
                         'PhantomJS': {
-                            sh 'yarn ng test --browsers "PhantomJS" --single-run --no-progress'
+                            sh 'yarn ng test --browsers "PhantomJS" --single-run --no-progress --code-coverage'
                         },
                         'Chrome': {
-                            sh 'yarn ng test --browsers "ChromeHeadless" --single-run --no-progress'
+                            sh 'yarn ng test --browsers "ChromeHeadless" --single-run --no-progress --code-coverage'
                         },
                         'Firefox': {
-                            sh 'yarn ng test --browsers "FirefoxHeadless" --single-run --no-progress'
+                            sh 'yarn ng test --browsers "FirefoxHeadless" --single-run --no-progress --code-coverage'
                         }
                     )
-                    junit 'test_results/**/*'
+                    junit 'reports/**/*'
+                    step([$class: 'CoberturaPublisher',
+                        autoUpdateHealth: false,
+                        autoUpdateStability: false,
+                        coberturaReportFile: 'reports/cobertura.xml',
+                        failUnhealthy: false,
+                        failUnstable: false,
+                        maxNumberOfBuilds: 0,
+                        onlyStable: false,
+                        sourceEncoding: 'ASCII',
+                        zoomCoverageChart: false])
                 }
 
                 stage('Publish') {

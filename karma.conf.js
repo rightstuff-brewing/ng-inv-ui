@@ -15,7 +15,8 @@ module.exports = function (config) {
       require('karma-jasmine-html-reporter'),
       require('karma-junit-reporter'),
       require('karma-coverage-istanbul-reporter'),
-      require('@angular/cli/plugins/karma')
+      require('@angular/cli/plugins/karma'),
+      require('karma-coverage')
     ],
     client:{
       clearContext: false // leave Jasmine Spec Runner output visible in browser
@@ -27,7 +28,7 @@ module.exports = function (config) {
     angularCli: {
       environment: 'dev'
     },
-    reporters: ['junit', 'progress', 'kjhtml'],
+    reporters: ['coverage', 'junit', 'progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
@@ -45,8 +46,28 @@ module.exports = function (config) {
         flags: isDocker ? ['-headless' ]: []
       }
     },
+    coverageReporter: {
+      dir: './reports/',
+      watermarks: {
+        statements: [50, 75],
+        functions: [50, 75],
+        branches: [50, 75],
+        lines: [50, 75]
+      },
+      reporters: [
+        {
+          type: 'cobertura',
+          subdir: '.',
+          file: 'cobertura.xml'
+        },
+        {
+          type: 'lcovonly',
+          subdir: 'lcov'
+        }
+      ]
+    },
     junitReporter: {
-      outputDir: 'test_results'
+      outputDir: './reports/'
     }
   });
 };
