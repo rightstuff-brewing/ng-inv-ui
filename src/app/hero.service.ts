@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -9,37 +9,34 @@ import { Hero } from './hero';
 export class HeroService {
 
   private heroesUrl = 'api/heroes';
-  private headers = new Headers({'Content-Type': 'application/json'});
 
-  constructor(private http: Http) { }
+  constructor(private http: HttpClient) { }
 
   getHeroes(): Promise<Hero[]> {
-    return this.http.get(this.heroesUrl)
-                    .toPromise()
-                    .then(response => response.json() as Hero[])
-                    .catch(this.handleError);
+    return this.http
+               .get<Hero[]>(this.heroesUrl)
+               .toPromise()
+               .catch(this.handleError);
   }
 
   getHero(id: number): Promise<Hero> {
     const url = `${this.heroesUrl}/${id}`;
-    return this.http.get(url)
+    return this.http.get<Hero>(url)
                     .toPromise()
-                    .then(response => response.json() as Hero)
                     .catch(this.handleError);
   }
 
   create(name: string): Promise<Hero> {
     return this.http
-               .post(this.heroesUrl, JSON.stringify({name: name}), {headers: this.headers})
+               .post(this.heroesUrl, {name: name})
                .toPromise()
-               .then(res => res.json() as Hero)
                .catch(this.handleError);
   }
 
   update(hero: Hero): Promise<Hero> {
     const url = `${this.heroesUrl}/${hero.id}`;
     return this.http
-               .put(url, JSON.stringify(hero), {headers: this.headers})
+               .put(url, hero)
                .toPromise()
                .then(() => hero)
                .catch(this.handleError);
@@ -48,7 +45,7 @@ export class HeroService {
   delete(id: number): Promise<void> {
     const url = `${this.heroesUrl}/${id}`;
     return this.http
-               .delete(url, {headers: this.headers})
+               .delete(url)
                .toPromise()
                .then(() => null)
                .catch(this.handleError);

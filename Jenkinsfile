@@ -39,7 +39,7 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
                             sh 'yarn ng test --browsers "FirefoxHeadless" --single-run --no-progress --code-coverage'
                         }
                     )
-                    junit 'reports/**/*'
+                    junit 'reports/**/TESTS-*.xml'
                     step([$class: 'CoberturaPublisher',
                         autoUpdateHealth: false,
                         autoUpdateStability: false,
