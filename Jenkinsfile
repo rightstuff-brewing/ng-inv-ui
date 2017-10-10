@@ -25,20 +25,19 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
                     sh 'yarn ng build --prod --aot --no-progress'
                 }
 
-                stage('Quick Test') {
-                    sh 'yarn ng test --browsers "PhantomJS" --single-run --no-progress'
-                }
-
                 stage('Test') {
-                    echo 'Disabled until real browser support is implemented'
                     parallel (
+                        'PhantomJS': {
+                            sh 'yarn ng test --browsers "PhantomJS" --single-run --no-progress'
+                        }
                         'Chrome': {
                             sh 'yarn ng test --browsers "ChromeHeadless" --single-run --no-progress'
                         },
                         'Firefox': {
-                            echo 'Test Firefox'
+                            sh 'yarn ng test --browsers "Firefox" --single-run --no-progress'
                         }
                     )
+                    junit 'test_results/**/*'
                 }
             }
         }

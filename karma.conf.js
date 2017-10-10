@@ -9,9 +9,11 @@ module.exports = function (config) {
     frameworks: ['jasmine', '@angular/cli'],
     plugins: [
       require('karma-jasmine'),
+      require('karma-firefox-launcher'),
       require('karma-chrome-launcher'),
       require('karma-phantomjs-launcher'),
       require('karma-jasmine-html-reporter'),
+      require('karma-junit-reporter'),
       require('karma-coverage-istanbul-reporter'),
       require('@angular/cli/plugins/karma')
     ],
@@ -25,19 +27,26 @@ module.exports = function (config) {
     angularCli: {
       environment: 'dev'
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['junit', 'progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome', 'ChromeHeadless', 'PhantomJS'],
+    browsers: ['Chrome', 'ChromeHeadless', 'FirefoxHeadless', 'PhantomJS'],
     singleRun: false,
     customLaunchers: {
       ChromeCustom: {
         base: 'ChromeHeadless',
         // We must disable the Chrome sandbox when running Chrome inside docker
         flags: isDocker ? ['--no-sandbox']: []
+      },
+      FirefoxHeadless: {
+        base: 'Firefox',
+        flags: isDocker ? ['-headless' ]: []
       }
+    },
+    junitReporter: {
+      outputDir: 'test_results'
     }
   });
 };
