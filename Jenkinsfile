@@ -29,7 +29,7 @@ podTemplate(cloud: 'local cluster', label: 'node-k8s',
                     parallel (
                         'PhantomJS': {
                             sh 'yarn ng test --browsers "PhantomJS" --single-run --no-progress'
-                        }
+                        },
                         'Chrome': {
                             sh 'yarn ng test --browsers "ChromeHeadless" --single-run --no-progress'
                         },
